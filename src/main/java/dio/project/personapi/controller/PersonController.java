@@ -3,6 +3,7 @@ package dio.project.personapi.controller;
 import dio.project.personapi.dto.request.PersonDTO;
 import dio.project.personapi.dto.response.MessageResponseDTO;
 import dio.project.personapi.entity.Person;
+import dio.project.personapi.exception.PersonNotFoundException;
 import dio.project.personapi.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,5 +32,21 @@ public class PersonController {
     @GetMapping
     public List<PersonDTO> getAllPerson(){
         return personService.getAllPerson();
+    }
+
+    @GetMapping("/{id}")
+    public PersonDTO findById(@PathVariable Long id) throws PersonNotFoundException {
+        return personService.findById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletePerson(@PathVariable Long id) throws PersonNotFoundException {
+        personService.deleteById(id);
+    }
+
+    @PutMapping("/{id}")
+    public MessageResponseDTO updatePerson(@PathVariable Long id, @RequestBody @Valid PersonDTO personDTO) throws PersonNotFoundException {
+        return personService.update(id, personDTO);
     }
 }
